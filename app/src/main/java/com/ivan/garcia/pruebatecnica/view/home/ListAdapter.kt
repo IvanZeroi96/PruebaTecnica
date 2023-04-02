@@ -1,9 +1,11 @@
+package com.ivan.garcia.pruebatecnica.view.home
+
+import UsersData
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ivan.garcia.pruebatecnica.R
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_user.view.*
 
 class ListAdapter(val userClick: (String) -> Unit): RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
@@ -28,7 +30,26 @@ class ListAdapter(val userClick: (String) -> Unit): RecyclerView.Adapter<ListAda
         holder.itemView.ageText.text = "Edad: " + user.edad.toString()
         holder.itemView.emailText.text = "Email: " + user.email
         holder.itemView.dateText.text = "Fecha Nacimiento: " + user.fechaNacimiento
-        holder.itemView.userImageView.setImageResource(R.mipmap.ic_user1)
+        holder.itemView.userImageView.setImageResource(R.mipmap.ic_user)
+
+        /*if(user.datos != null){
+            if(user.datos.imagen != null){
+                holder.itemView.userImageView.setImageResource(R.mipmap.ic_user)
+            }else{
+                try {
+                    val image = decodeImageBase64(user.datos.imagen)
+                    if(image != null){
+                        holder.itemView.userImageView.setImageBitmap(image)
+                    }else{
+                        holder.itemView.userImageView.setImageResource(R.mipmap.ic_user)
+                    }
+                }catch (e: Exception){
+                    holder.itemView.userImageView.setImageResource(R.mipmap.ic_user)
+                }
+            }
+        }else{
+            holder.itemView.userImageView.setImageResource(R.mipmap.ic_user)
+        }*/
     }
 
     fun updateData(list: List<UsersData>){

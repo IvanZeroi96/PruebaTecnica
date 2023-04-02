@@ -1,12 +1,15 @@
 package com.ivan.garcia.pruebatecnica
-import ListAdapter
+import com.ivan.garcia.pruebatecnica.view.home.ListAdapter
 import UsersData
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ivan.garcia.pruebatecnica.view.ListViewModel
+import com.ivan.garcia.pruebatecnica.view.add_user.AddUserActivity
+import com.ivan.garcia.pruebatecnica.view.home.ListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,11 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val addUserButton: View = findViewById(R.id.add_user)
+
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
         listRecyclerView.layoutManager = LinearLayoutManager(this)
-        listRecyclerView.adapter = ListAdapter{
-
-        }
+        listRecyclerView.adapter = ListAdapter{}
 
         viewModel.getDataList()
 
@@ -39,6 +42,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.usersList.observe(this) {
                 (listRecyclerView.adapter as ListAdapter).updateData(listFiltered)
             }
+        }
+
+
+        addUserButton.setOnClickListener {
+            val intent = Intent(this, AddUserActivity::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.ivan.garcia.pruebatecnica.view
+package com.ivan.garcia.pruebatecnica.view.home
 import UsersData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
