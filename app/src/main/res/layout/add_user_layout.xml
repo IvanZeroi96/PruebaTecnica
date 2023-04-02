@@ -15,9 +15,9 @@
         android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:background="@color/white"
-        android:scaleType="fitXY"
         android:layout_gravity="center"
         android:src="@mipmap/ic_user"
+        android:scaleType="centerInside"
         tools:srcCompat="@tools:sample/avatars" />
 
     <EditText
@@ -30,6 +30,7 @@
         android:textColor="@color/black"
         android:hint="Ingresa tu nombre"
         android:textSize="18sp"
+        android:paddingTop="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +84,8 @@
         android:layout_gravity="start"
         android:maxLines="1"
         android:inputType="date"
+        android:focusable="false"
+        android:clickable="false"
         android:textColor="@color/black"
         android:hint="Ingresa tu fecha de nacimiento"
         android:textSize="18sp"
@@ -174,6 +177,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:layout_marginTop="40dp"
+        android:id="@+id/submitBtn"
+        android:textStyle="bold"
+        android:text="Guardar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>
