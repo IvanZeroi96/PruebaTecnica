@@ -16,13 +16,12 @@
 
     <ImageView
         android:id="@+id/userImageView"
-        android:layout_width="100pt"
-        android:layout_height="100pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="@color/white"
         android:layout_gravity="center"
         android:src="@mipmap/ic_user"
-        android:scaleType="centerInside"
         tools:srcCompat="@tools:sample/avatars" />
 
     <EditText
@@ -39,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/userImageView" />
     <EditText
         android:id="@+id/secondNameEditText"
         android:layout_width="match_parent"

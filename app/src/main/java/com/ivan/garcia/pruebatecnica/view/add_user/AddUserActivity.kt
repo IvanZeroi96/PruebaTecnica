@@ -3,7 +3,9 @@ package com.ivan.garcia.pruebatecnica.view.add_user
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Environment.*
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.ivan.garcia.pruebatecnica.R
@@ -43,6 +46,7 @@ class AddUserActivity : AppCompatActivity() {
     private lateinit var cpEditText: EditText
     private lateinit var submitBtn: Button
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -209,9 +213,9 @@ class AddUserActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @Throws(IOException::class)
     private fun captureImage() {
-        // PARA CAPTURAR IMAGEN
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         var imagenArchivo: File? = null
         try {
@@ -225,7 +229,8 @@ class AddUserActivity : AppCompatActivity() {
                 "com.ivan.garcia.pruebatecnica.fileprovider",
                 imagenArchivo
             )
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri)
+            intent.putExtra(MediaStore.EXTRA_ACCEPT_ORIGINAL_MEDIA_FORMAT, fotoUri)
+
         }
         startActivityForResult(intent, 1)
     }
@@ -234,16 +239,19 @@ class AddUserActivity : AppCompatActivity() {
     private fun createImge(): File? {
         val nombreImagen = "Img-"
         val directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val imagen = File.createTempFile(nombreImagen, ".jpg", directorio)
+        val imagen = File.createTempFile(nombreImagen, ".png", directorio)
         rutaImagen = imagen.absolutePath
         return imagen
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            val imgBitmap = BitmapFactory.decodeFile(rutaImagen)
-            photoImageView.setImageBitmap(imgBitmap)
+            val extras = data!!.extras
+            val imgBitmap = extras!!["data"] as Bitmap?
+            val resizedBitmap = Bitmap.createScaledBitmap(imgBitmap!!, 300, 300, true)
+            photoImageView.setImageBitmap(resizedBitmap)
         }
     }
 }
