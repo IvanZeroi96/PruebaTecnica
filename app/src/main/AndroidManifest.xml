@@ -20,9 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PruebaTecnica"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.ivan.garcia.pruebatecnica"
-            android:resource="@xml/file_paths" />
         <provider
             android:authorities="com.ivan.garcia.pruebatecnica.fileprovider"
             android:name="androidx.core.content.FileProvider"
