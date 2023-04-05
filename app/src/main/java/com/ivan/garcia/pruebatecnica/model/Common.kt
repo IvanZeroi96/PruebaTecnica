@@ -31,7 +31,7 @@ fun encodeImages(path: String): String? {
     }
     val bm = BitmapFactory.decodeStream(fis)
     val baos = ByteArrayOutputStream()
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
     val b: ByteArray = baos.toByteArray()
     val imgDecodableString = Base64.encodeToString(b, Base64.DEFAULT)
     return imgDecodableString
