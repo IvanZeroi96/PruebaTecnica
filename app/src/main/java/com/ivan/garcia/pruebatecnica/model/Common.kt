@@ -4,11 +4,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Patterns
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.util.regex.Pattern
-
 
 class Common {
     val baseUrlSearch : String = "https://api.devdicio.net:8444/v1/sec_dev_interview/"
@@ -21,20 +17,15 @@ fun decodeImageBase64 (imadeDecodeString: String): Bitmap {
     return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 }
 
-fun encodeImages(path: String): String? {
-    val imagefile = File(path)
-    var fis: FileInputStream? = null
+fun encodeImages(bitmap: Bitmap): String? {
     try {
-        fis = FileInputStream(imagefile)
-    } catch (e: FileNotFoundException) {
-        e.printStackTrace()
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }catch (ex: Exception){
+     return ""
     }
-    val bm = BitmapFactory.decodeStream(fis)
-    val baos = ByteArrayOutputStream()
-    bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
-    val b: ByteArray = baos.toByteArray()
-    val imgDecodableString = Base64.encodeToString(b, Base64.DEFAULT)
-    return imgDecodableString
 }
 
 

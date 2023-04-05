@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -31,6 +30,7 @@ import java.util.*
 class AddUserActivity : AppCompatActivity() {
 
     var rutaImagen: String = ""
+    var base64Img: String = ""
 
     private lateinit var  photoImageView : ImageView
     private lateinit var nameEditText: EditText
@@ -154,8 +154,7 @@ class AddUserActivity : AppCompatActivity() {
         }
 
         if(isCompleteForm){
-            val base64Img = encodeImages(rutaImagen)
-            createUser(userName.toString(),secondName.toString(),lastdName.toString(),email,date.toString(),calle.toString(),numero.toString(),colonia.toString(),delegacion.toString(),estado.toString(),cp.toString(),base64Img.toString())
+            createUser(userName.toString(),secondName.toString(),lastdName.toString(),email,date.toString(),calle.toString(),numero.toString(),colonia.toString(),delegacion.toString(),estado.toString(),cp.toString(),base64Img)
         }
     }
 
@@ -237,7 +236,7 @@ class AddUserActivity : AppCompatActivity() {
 
     @Throws(IOException::class)
     private fun createImge(): File? {
-        val nombreImagen = "Img-"
+        val nombreImagen = "Img_"
         val directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imagen = File.createTempFile(nombreImagen, ".png", directorio)
         rutaImagen = imagen.absolutePath
@@ -252,6 +251,7 @@ class AddUserActivity : AppCompatActivity() {
             val imgBitmap = extras!!["data"] as Bitmap?
             val resizedBitmap = Bitmap.createScaledBitmap(imgBitmap!!, 300, 300, true)
             photoImageView.setImageBitmap(resizedBitmap)
+            base64Img = encodeImages(resizedBitmap)!!
         }
     }
 }
