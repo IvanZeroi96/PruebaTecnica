@@ -1,18 +1,35 @@
 package com.ivan.garcia.pruebatecnica.view.add_user
+
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.*
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.ivan.garcia.pruebatecnica.R
+import com.ivan.garcia.pruebatecnica.model.add_user.DirectionData
 import com.ivan.garcia.pruebatecnica.model.add_user.ModelRegister
+import com.ivan.garcia.pruebatecnica.model.encodeImages
 import com.ivan.garcia.pruebatecnica.model.isValidEmail
+import java.io.File
+import java.io.IOException
 import java.util.*
+
 
 class AddUserActivity : AppCompatActivity() {
 
+    var rutaImagen: String = ""
+
+    private lateinit var  photoImageView : ImageView
     private lateinit var nameEditText: EditText
     private lateinit var secondNameEditText: EditText
     private lateinit var lastNameEditText: EditText
@@ -41,9 +58,14 @@ class AddUserActivity : AppCompatActivity() {
             showDatePickerDialog()
         }
 
+        photoImageView.setOnClickListener {
+            captureImage()
+        }
+
     }
 
     private fun findUI(){
+        photoImageView = findViewById(R.id.userImageView)
         nameEditText = findViewById(R.id.nameEditText)
         secondNameEditText = findViewById(R.id.secondNameEditText)
         lastNameEditText = findViewById(R.id.lastdNameEditText)
@@ -71,6 +93,11 @@ class AddUserActivity : AppCompatActivity() {
         val estado = estadoEditText.text.trim()
         val cp = cpEditText.text.trim()
         var isCompleteForm: Boolean = true
+
+        if(rutaImagen.isBlank()){
+            Toast.makeText(this,"Foto requerida",Toast.LENGTH_SHORT).show()
+            isCompleteForm = false
+        }
 
         if(userName.isBlank()){
             nameEditText.error = "Nombre requerido"
@@ -123,7 +150,8 @@ class AddUserActivity : AppCompatActivity() {
         }
 
         if(isCompleteForm){
-            createUser(userName.toString(),secondName.toString(),lastdName.toString(),email,date.toString())
+            val base64Img = encodeImages(rutaImagen)
+            createUser(userName.toString(),secondName.toString(),lastdName.toString(),email,date.toString(),calle.toString(),numero.toString(),colonia.toString(),delegacion.toString(),estado.toString(),cp.toString(),base64Img.toString())
         }
     }
 
@@ -143,7 +171,15 @@ class AddUserActivity : AppCompatActivity() {
         apellidoMaterno: String,
         apellidoPaterno: String,
         email: String,
-        fechaNacimiento:String){
+        fechaNacimiento:String,
+        calle: String,
+        numero: String,
+        colonia: String,
+        delegacion: String,
+        estado: String,
+        cp: String,
+        image: String,
+    ){
         val apiService = UserView()
         val userInfo = ModelRegister(
             nombre = nombre,
@@ -151,7 +187,16 @@ class AddUserActivity : AppCompatActivity() {
             apellidoPaterno = apellidoPaterno,
             email = email,
             edad = 0,
-            fechaNacimiento = fechaNacimiento
+            fechaNacimiento = fechaNacimiento,
+            datos = DirectionData(
+                calle = calle,
+                numero = numero,
+                colonia = colonia,
+                delegacion = delegacion,
+                estado = estado,
+                cp = cp,
+                imagen = image,
+            )
         )
 
         apiService.addUserRegister(userInfo) {
@@ -161,6 +206,44 @@ class AddUserActivity : AppCompatActivity() {
                 Toast.makeText(this,"Se registro el usuario",Toast.LENGTH_SHORT).show()
                 finish()
             }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun captureImage() {
+        // PARA CAPTURAR IMAGEN
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        var imagenArchivo: File? = null
+        try {
+            imagenArchivo = createImge()
+        } catch (ex: IOException) {
+            Log.e("Error", ex.toString())
+        }
+        if (imagenArchivo != null) {
+            val fotoUri = FileProvider.getUriForFile(
+                this,
+                "com.ivan.garcia.pruebatecnica.fileprovider",
+                imagenArchivo
+            )
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri)
+        }
+        startActivityForResult(intent, 1)
+    }
+
+    @Throws(IOException::class)
+    private fun createImge(): File? {
+        val nombreImagen = "Img-"
+        val directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imagen = File.createTempFile(nombreImagen, ".jpg", directorio)
+        rutaImagen = imagen.absolutePath
+        return imagen
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            val imgBitmap = BitmapFactory.decodeFile(rutaImagen)
+            photoImageView.setImageBitmap(imgBitmap)
         }
     }
 }
